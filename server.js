@@ -1,11 +1,12 @@
 const express = require('express');
 const axios = require('axios');
-const http =require('http');
+const http = require('http');
 const app = express();
 
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.urlencoded({extended: true}));
+app.use(express.json());
 
 app.get('/', (req, res) => {
     let url = 'https://api.themoviedb.org/3/movie/76492?api_key=db428011a9f0984740b0d7c5974d2962';
@@ -81,17 +82,12 @@ app.post('/search', (req,res) =>{
 
 });
 
-app.listen(process.env.PORT || 3000, ()=> {
-    console.log('Server is running on port 3000.')
-});
-
 //new route
 app.post('/getmovie', (req, res) => {
 	const movieToSearch =
 		req.body.queryResult && req.body.queryResult.parameters && req.body.queryResult.parameters.movie
 			? req.body.queryResult.parameters.movie
 			: '';
-
 	const reqUrl = encodeURI(
 		`http://www.omdbapi.com/?t=${movieToSearch}&apikey=cc6f9d1b`
 	);
@@ -129,4 +125,8 @@ app.post('/getmovie', (req, res) => {
 			});
 		}
 	)
+});
+
+app.listen(process.env.PORT || 3000, ()=> {
+    console.log('Server is running on port 3000.')
 });
